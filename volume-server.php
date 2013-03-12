@@ -1,13 +1,14 @@
 #!/usr/bin/php -q
 <?
 // volume-server.php - Speedy response w/IR Remotes.
+// By: Ryan Hunt <admin@nayr.net> - License: CC-BY-SA
 // This service runs in background and watches pipe file for 
 // u = volume up
 // d = volume down
 // m = mute toggle
 
-$avrhost = "einstein-avr";
-$avrport = "42042";
+$avrhost = "avr";
+$avrport = "22";
 
 ob_implicit_flush(false);
 error_reporting(0);
@@ -16,7 +17,6 @@ $pipe="/tmp/volume.pipe";
 $mode=0600;
 unlink($pipe);
 if(!file_exists($pipe)) {
-	// create the pipe
 	umask(0);
 	posix_mkfifo($pipe,$mode);
 } 
@@ -35,14 +35,10 @@ while (true) {
 fclose($socket);
 unlink($pipe);
 
-
 // Functions
 
 function avrCommand($command) {
 	global $socket;
         fputs($socket, $command."\r\n");
-//        return stream_get_line($socket,6, "\r\n");
 }
-
-
 ?>
